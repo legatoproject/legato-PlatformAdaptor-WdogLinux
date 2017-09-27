@@ -1,0 +1,17 @@
+sources:
+{
+    $LEGATO_ROOT/platformAdaptor/wdog/linux/components/le_pa_wdog/pa_wdog.c
+}
+
+cflags:
+{
+    -I$LEGATO_ROOT/framework/daemons/linux/watchdog/inc
+
+    #if ${LEGATO_TARGET} = wp750x
+        -DPA_WDOG_MODULE=softdog
+        -DPA_WDOG_DEVICE=/dev/watchdog
+    #elif ${LEGATO_TARGET} = wp85
+        -DPA_WDOG_MODULE=softdog
+        -DPA_WDOG_DEVICE=/dev/watchdog
+    #endif
+}
