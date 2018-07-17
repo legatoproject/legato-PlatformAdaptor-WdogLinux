@@ -28,7 +28,7 @@
  * File descriptor of the external watchdog.
  */
 //--------------------------------------------------------------------------------------------------
-#ifdef PA_WDOG_DEVICE
+#if LE_CONFIG_WDOG_ENABLE_EXTERNAL
 static int wdogFd = -1;
 #endif
 
@@ -40,7 +40,7 @@ static int wdogFd = -1;
 //--------------------------------------------------------------------------------------------------
 static void SigTermEventHandler(int sigNum)
 {
-#ifdef PA_WDOG_DEVICE
+#if LE_CONFIG_WDOG_ENABLE_EXTERNAL
     if (write(wdogFd, "V", 1) != 1)
     {
         LE_WARN("Failed to write to watchdog.");
@@ -83,7 +83,7 @@ void pa_wdog_Kick
     void
 )
 {
-#ifdef PA_WDOG_DEVICE
+#if LE_CONFIG_WDOG_ENABLE_EXTERNAL
     if (wdogFd != -1)
     {
         if (write(wdogFd, "k", 1) != 1)
@@ -106,22 +106,23 @@ void pa_wdog_Init
 )
 {
     // Initialize external linux watchdog
-#ifdef PA_WDOG_DEVICE
-#  ifdef PA_WDOG_MODULE
-    char systemCmd[MAX_SYSTEM_CMD_LENGTH] = {0};
-    snprintf(systemCmd, sizeof(systemCmd), "/sbin/modprobe %s", STRINGIZE(PA_WDOG_MODULE));
-    if (system(systemCmd) < 0)
+#if LE_CONFIG_WDOG_ENABLE_EXTERNAL
+    if (LE_CONFIG_WDOG_PA_MODULE[0] != '\0')
     {
-        LE_WARN("Unable to load linux softdog driver.");
+        char systemCmd[MAX_SYSTEM_CMD_LENGTH] = {0};
+        snprintf(systemCmd, sizeof(systemCmd), "/sbin/modprobe %s", LE_CONFIG_WDOG_PA_MODULE);
+        if (system(systemCmd) < 0)
+        {
+            LE_WARN("Unable to load linux softdog driver.");
+        }
     }
-#  endif
 
     // Spin until watchdog opens.
     int i;
 
     for (i = 0; i < MAX_WDOG_OPEN_TRIES; ++i)
     {
-        wdogFd = open(STRINGIZE(PA_WDOG_DEVICE), O_WRONLY);
+        wdogFd = open(LE_CONFIG_WDOG_PA_DEVICE, O_WRONLY);
         if (wdogFd < 0)
         {
             LE_WARN("Failed to open watchdog device; retrying...");

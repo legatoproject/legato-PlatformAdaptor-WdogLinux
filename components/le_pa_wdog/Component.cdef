@@ -6,12 +6,4 @@ sources:
 cflags:
 {
     -I$LEGATO_ROOT/framework/daemons/linux/watchdog/inc
-
-    #if ${LEGATO_TARGET} = wp750x
-        -DPA_WDOG_MODULE=softdog
-        -DPA_WDOG_DEVICE=/dev/watchdog
-    #elif ${LEGATO_TARGET} = wp85
-        -DPA_WDOG_MODULE=softdog
-        -DPA_WDOG_DEVICE=/dev/watchdog
-    #endif
 }
