@@ -126,7 +126,7 @@ void pa_wdog_Init
         if (wdogFd < 0)
         {
             LE_WARN("Failed to open watchdog device; retrying...");
-            sleep(1);
+            le_thread_Sleep(1);
         }
         else
         {
