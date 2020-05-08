@@ -69,7 +69,7 @@ void pa_wdog_Shutdown
     void
 )
 {
-    LE_FATAL("Watchdog expired. Restart device.")
+    LE_FATAL("Watchdog expired. Restart device.");
 }
 
 
